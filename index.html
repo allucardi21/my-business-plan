@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Бізнес-план: Моніторинг цін для eCommerce</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8f9fb;
+      color: #333;
+    }
+    header {
+      background: #0d6efd;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    main {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    h2 {
+      color: #0d6efd;
+      border-bottom: 2px solid #dee2e6;
+      padding-bottom: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    th, td {
+      border: 1px solid #dee2e6;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #e9f0fc;
+    }
+    .highlight {
+      background: #d1e7dd;
+      color: #0f5132;
+      padding: 15px;
+      margin: 20px 0;
+      border-left: 5px solid #198754;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      padding: 30px 10px;
+      color: #888;
+    }
+    canvas {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+      margin: 30px 0;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Бізнес-план стартапу: сервіс моніторингу цін</h1>
+</header>
+
+<main>
+
+  <h2>Графік 1: Зростання кількості клієнтів</h2>
+  <canvas id="clientsChart" height="120"></canvas>
+
+  <h2>Графік 2: Прибуток по місяцях</h2>
+  <canvas id="profitChart" height="120"></canvas>
+
+  <h2>Графік 3: Виручка vs Витрати</h2>
+  <canvas id="revenueCostChart" height="120"></canvas>
+
+  <div class="highlight">
+    Після 12 місяця бізнес виходить в окупність і швидко нарощує прибуток.
+  </div>
+
+</main>
+
+<footer>
+  © 2025 Startup Analytics. Візуалізація бізнес-плану.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const months = [...Array(36).keys()].map(i => `Місяць ${i+1}`);
+  const clients = months.map((_, i) => (i < 6 ? 0 : (i - 5) * 10));
+  const revenue = clients.map(c => c * 110);
+  const costClients = clients.map(c => c * 20);
+  const office = 2000;
+  const marketing = months.map((_, i) => (i < 6 ? 0 : 3000));
+  const fixedCosts = months.map(() => office);
+  const totalCosts = months.map((_, i) =>
+    (costClients[i] || 0) + (marketing[i] || 0) + office + (i < 6 ? (i === 5 ? 50000 : 0) : 0)
+  );
+  const profit = revenue.map((r, i) => r - totalCosts[i]);
+
+  new Chart(document.getElementById("clientsChart"), {
+    type: "line",
+    data: {
+      labels: months,
+      datasets: [{
+        label: "Кількість клієнтів",
+        data: clients,
+        borderColor: "#0d6efd",
+        fill: false,
+        tension: 0.2
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  new Chart(document.getElementById("profitChart"), {
+    type: "bar",
+    data: {
+      labels: months,
+      datasets: [{
+        label: "Чистий прибуток ($)",
+        data: profit,
+        backgroundColor: "#198754"
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  new Chart(document.getElementById("revenueCostChart"), {
+    type: "line",
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: "Виручка ($)",
+          data: revenue,
+          borderColor: "#0d6efd",
+          fill: false,
+          tension: 0.2
+        },
+        {
+          label: "Сумарні витрати ($)",
+          data: totalCosts,
+          borderColor: "#dc3545",
+          fill: false,
+          tension: 0.2
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+</script>
+
+</body>
+</html>
